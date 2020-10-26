@@ -1,0 +1,15 @@
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\bin\Debug\BetterMusic.exe.config
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\bin\Debug\BetterMusic.exe
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\bin\Debug\BetterMusic.pdb
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic.csprojAssemblyReference.cache
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\MainWindow.g.cs
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\App.g.cs
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic_MarkupCompile.cache
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic_MarkupCompile.lref
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\MainWindow.baml
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic.g.resources
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic.Properties.Resources.resources
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic.csproj.GenerateResource.cache
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic.csproj.CoreCompileInputs.cache
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic.exe
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic.pdb
