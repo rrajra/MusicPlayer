@@ -13,3 +13,5 @@ C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic.csproj.
 C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic.csproj.CoreCompileInputs.cache
 C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic.exe
 C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic.pdb
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\Interop.WMPLib.dll
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic.csproj.ResolveComReference.cache
