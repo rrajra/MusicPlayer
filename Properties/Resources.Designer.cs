@@ -61,6 +61,15 @@ namespace BetterMusic.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to C:\Users\Matt\source\repos\BetterMusic\BetterMusic\Properties\Resources\Cassette.jpg.
+        /// </summary>
+        internal static string Cassette {
+            get {
+                return ResourceManager.GetString("Cassette", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
         internal static string icon {

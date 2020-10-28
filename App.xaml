@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:BetterMusic"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <BitmapImage x:Key="cassette" UriSource="assetts\cassette.jpg"></BitmapImage>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
