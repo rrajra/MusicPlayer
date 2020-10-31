@@ -10,11 +10,11 @@
         <Button x:Name="playBtn" Content="Play" HorizontalAlignment="Left" Margin="348,389,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" RenderTransformOrigin="0.5,1"/>
         <Button Content="Skip" HorizontalAlignment="Left" Margin="447,389,0,0" VerticalAlignment="Top" Width="75" Click="SkipSong" RenderTransformOrigin="0.5,1"/>
         <Button Content="Back" HorizontalAlignment="Left" Margin="255,389,0,0" VerticalAlignment="Top" Width="75" Click="backClick" RenderTransformOrigin="0.5,1"/>
-        <Image x:Name="musicImg" HorizontalAlignment="Left" Height="321" Margin="115,10,0,0" VerticalAlignment="Top" Width="667" Source="assetts/cassette.jpg"/>
-        <Label x:Name="timeCounter" Content="" HorizontalAlignment="Left" Margin="447,343,0,0" VerticalAlignment="Top" Width="75"/>
+        <Image x:Name="musicImg" HorizontalAlignment="Left" Height="250" Margin="255,81,0,0" VerticalAlignment="Top" Width="267" Source="assetts/cassette.jpg"/>
+        <Label x:Name="timeCounter" Content="" HorizontalAlignment="Left" Margin="447,336,0,0" VerticalAlignment="Top" Width="75"/>
         <Label x:Name="songTitle" Content="" HorizontalAlignment="Left" Margin="255,332,0,0" VerticalAlignment="Top"/>
         <Button x:Name="fileDialog" Content="Browse" HorizontalAlignment="Left" Margin="10,389,0,0" VerticalAlignment="Top" Width="75" Click="fileDialog_Click" RenderTransformOrigin="0,1"/>
-        <ListBox x:Name="songMenu" HorizontalAlignment="Left" Height="321" Margin="10,10,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0,0.5"/>
+        <ListBox x:Name="songMenu" HorizontalAlignment="Left" Height="321" Margin="10,10,0,0" VerticalAlignment="Top" Width="143" RenderTransformOrigin="0,0.5" SelectionChanged="SongMenu_SelectionChanged" MouseDoubleClick="songMenu_MouseDoubleClick"/>
         <Button x:Name="play" Content="Select" HorizontalAlignment="Left" Margin="10,343,0,0" VerticalAlignment="Top" Width="75" Click="selectSong" RenderTransformOrigin="0,1"/>
         <Slider x:Name="volSlider" HorizontalAlignment="Left" Margin="656,389,0,0" VerticalAlignment="Top" Width="126" Value="100" RenderTransformOrigin="1,1"/>
         <Label Content="Volume" HorizontalAlignment="Left" Margin="656,363,0,0" VerticalAlignment="Top" RenderTransformOrigin="1,1"/>

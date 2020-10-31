@@ -32,7 +32,8 @@ namespace BetterMusic
      * Open music file and listen to it
      * Display metadata (Artist, Song Title, Length... etc)
         - Uses TagLib for metadata
-     * Pause / volume buttons
+     * Pause / play functionality
+     * Volume slider
      * Tray functionality
      */
 
@@ -145,6 +146,10 @@ namespace BetterMusic
             TagLib.File tagLibSong = TagLib.File.Create(recordLocation + recordName);
             var convert = tagLibSong.Properties.Duration;
             songDuration = convert.TotalSeconds;
+            if(songDuration == 0 )
+            {
+                MessageBox.Show("Something is wrong with this audiofile. The file will attempt to play, however issues may arise. Some features will not work. Please fix the file to have it run as intended.");
+            }
             MessageBox.Show(songDuration.ToString());
 
             try
@@ -372,6 +377,27 @@ namespace BetterMusic
         private void SkipSong(object sender, RoutedEventArgs e)
         {
             SkipSong();
+        }
+
+        private void songMenu_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                playerNew.controls.pause();
+                string selected = songMenu.SelectedValue.ToString();
+                recordName = @"\" + selected;
+                currentTime = 0;
+                playMusic();
+            }
+            catch
+            {
+                MessageBox.Show("No song selected");
+            }
+        }
+
+        private void SongMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
