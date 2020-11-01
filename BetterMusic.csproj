@@ -77,6 +77,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="assetts\AssetDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -151,6 +155,20 @@
     <Resource Include="assetts\phone.jpg" />
     <Resource Include="assetts\record.jpg" />
     <Resource Include="assetts\records.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assetts\icons\folder.png" />
+    <Resource Include="assetts\icons\mute.png" />
+    <Resource Include="assetts\icons\next.png" />
+    <Resource Include="assetts\icons\pause.png" />
+    <Resource Include="assetts\icons\pausealt.png" />
+    <Resource Include="assetts\icons\play.png" />
+    <Resource Include="assetts\icons\previous.png" />
+    <Resource Include="assetts\icons\volumehigh.png" />
+    <Resource Include="assetts\icons\volumelow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assetts\icons\nextalt.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

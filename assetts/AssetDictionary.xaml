@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:BetterMusic.assetts">
+
+    <Image x:Key="PlayBtn" Source="assetts/icons/folder.png" Height="24" Width="24"/>
+    <Image x:Key="PauseBtn" Source="assetts/icons/folder.png" Height="24" Width="24"/>
+    <Image x:Key="Mute" Source="assetts/icons/folder.png" Height="24" Width="24"/>
+    <BitmapImage x:Key="Muted" UriSource="/assetts/icons/mute.png"/>
+    <BitmapImage x:Key="PlayBtnn" UriSource="/assetts/icons/play.png"/>
+    <BitmapImage x:Key="PauseBtnn" UriSource="/assetts/icons/pause.png"/>
+    <BitmapImage x:Key="VolumeHigh" UriSource="/assetts/icons/volumehigh.png"/>
+    <BitmapImage x:Key="VolumeLow" UriSource="/assetts/icons/volumelow.png"/>
+    <BitmapImage x:Key="Browse" UriSource="/assetts/icons/folder.png"/>
+</ResourceDictionary>

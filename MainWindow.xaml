@@ -6,19 +6,48 @@
         xmlns:local="clr-namespace:BetterMusic"
         mc:Ignorable="d"
         Title="Better Music" Icon="disc.ico" Height="450" Width="800">
+    <Window.Resources>
+        <Image x:Key="play" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/play.png" Height="24" Width="24"/>
+        <Image x:Key="pause" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/pause.png" Height="24" Width="24"/>
+        <Image x:Key="next" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/next.png" Height="24" Width="24"/>
+        <Image x:Key="mute" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/mute.png" Height="24" Width="24"/>
+        <Image x:Key="volumehigh" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/volumehigh.png" Height="24" Width="24"/>
+        <Image x:Key="volumelow" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/volumelow.png" Height="24" Width="24"/>
+    </Window.Resources>
     <Grid>
-        <Button x:Name="playBtn" Content="Play" HorizontalAlignment="Left" Margin="348,389,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" RenderTransformOrigin="0.5,1"/>
-        <Button Content="Skip" HorizontalAlignment="Left" Margin="447,389,0,0" VerticalAlignment="Top" Width="75" Click="SkipSong" RenderTransformOrigin="0.5,1"/>
-        <Button Content="Back" HorizontalAlignment="Left" Margin="255,389,0,0" VerticalAlignment="Top" Width="75" Click="backClick" RenderTransformOrigin="0.5,1"/>
-        <Image x:Name="musicImg" HorizontalAlignment="Left" Height="250" Margin="255,81,0,0" VerticalAlignment="Top" Width="267" Source="assetts/cassette.jpg"/>
+        <Button x:Name="playBtn" HorizontalAlignment="Left" Margin="348,381,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" RenderTransformOrigin="0.5,1" Background="Transparent" BorderBrush="Transparent">
+            <StackPanel>
+                <Image Source="assetts/icons/play.png" Height="24" Width="24"/>
+            </StackPanel>
+        </Button>
+        <Button HorizontalAlignment="Left" Margin="447,381,0,0" VerticalAlignment="Top" Width="75" Click="SkipSong" RenderTransformOrigin="0.5,1" Background="Transparent" BorderBrush="Transparent">
+            <StackPanel>
+                <Image Source="assetts/icons/next.png" Height="24" Width="24"/>
+            </StackPanel>
+        </Button>
+        <Button HorizontalAlignment="Left" Margin="255,381,0,0" VerticalAlignment="Top" Width="75" Click="backClick" RenderTransformOrigin="0.5,1" Background="Transparent" BorderBrush="Transparent">
+            <StackPanel>
+                <Image Source="assetts/icons/previous.png" Height="24" Width="24"/>
+            </StackPanel>
+        </Button>
+        <Image x:Name="musicImg" HorizontalAlignment="Left" Height="230" Margin="255,50,0,0" VerticalAlignment="Top" Width="267" Source="assetts/cassette.jpg"/>
         <Label x:Name="timeCounter" Content="" HorizontalAlignment="Left" Margin="447,336,0,0" VerticalAlignment="Top" Width="75"/>
-        <Label x:Name="songTitle" Content="" HorizontalAlignment="Left" Margin="255,332,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="fileDialog" Content="Browse" HorizontalAlignment="Left" Margin="10,389,0,0" VerticalAlignment="Top" Width="75" Click="fileDialog_Click" RenderTransformOrigin="0,1"/>
+        <Label x:Name="songTitle" Content="" HorizontalContentAlignment="Center" Margin="255,280,270,0" VerticalAlignment="Top"/>
+        <Button x:Name="fileDialog" HorizontalAlignment="Left" Margin="10,381,0,0" VerticalAlignment="Top" Width="75" Click="fileDialog_Click" RenderTransformOrigin="0,1" Background="Transparent" BorderBrush="Transparent">
+            <StackPanel>
+                <Image Source="{StaticResource Browse}" Height="24" Width="24"/>
+            </StackPanel>
+        </Button>
         <ListBox x:Name="songMenu" HorizontalAlignment="Left" Height="321" Margin="10,10,0,0" VerticalAlignment="Top" Width="143" RenderTransformOrigin="0,0.5" SelectionChanged="SongMenu_SelectionChanged" MouseDoubleClick="songMenu_MouseDoubleClick"/>
-        <Button x:Name="play" Content="Select" HorizontalAlignment="Left" Margin="10,343,0,0" VerticalAlignment="Top" Width="75" Click="selectSong" RenderTransformOrigin="0,1"/>
-        <Slider x:Name="volSlider" HorizontalAlignment="Left" Margin="656,389,0,0" VerticalAlignment="Top" Width="126" Value="100" RenderTransformOrigin="1,1"/>
+        <Button x:Name="play" Content="Select" HorizontalAlignment="Left" Margin="-168,343,0,0" VerticalAlignment="Top" Width="75" Click="selectSong" RenderTransformOrigin="0,1"/>
+        <Slider x:Name="volSlider" HorizontalAlignment="Left" Margin="656,389,0,0" VerticalAlignment="Top" Width="126" Value="100" RenderTransformOrigin="1,1" ValueChanged="VolSlider_ValueChanged" Maximum="100"/>
         <Label Content="Volume" HorizontalAlignment="Left" Margin="656,363,0,0" VerticalAlignment="Top" RenderTransformOrigin="1,1"/>
         <Slider x:Name="progressSlider" HorizontalAlignment="Left" Margin="255,363,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.752,0.021" Width="267"/>
+        <Button x:Name="mute" HorizontalAlignment="Left" Margin="624,381,0,0" VerticalAlignment="Top" Width="32" Background="Transparent" BorderBrush="Transparent" Click="Mute" x:FieldModifier="public">
+            <StackPanel x:Name="volPanel" x:FieldModifier="public">
+                <Image x:Name="muteImg" Source="{StaticResource VolumeHigh}" Height="24" Width="24" x:FieldModifier="public"/>
+            </StackPanel>
+        </Button>
 
     </Grid>
 </Window>
