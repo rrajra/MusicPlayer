@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BetterMusic"
         mc:Ignorable="d"
-        Title="Better Music" Icon="disc.ico" Height="450" Width="800">
+        Title="Better Music" Icon="disc.ico" Height="450" Width="800" KeyUp="Better_Music_KeyUp">
     <Window.Resources>
         <Image x:Key="play" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/play.png" Height="24" Width="24"/>
         <Image x:Key="pause" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/pause.png" Height="24" Width="24"/>
@@ -14,7 +14,7 @@
         <Image x:Key="volumehigh" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/volumehigh.png" Height="24" Width="24"/>
         <Image x:Key="volumelow" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/volumelow.png" Height="24" Width="24"/>
     </Window.Resources>
-    <Grid>
+    <Grid x:Name="bgGrid">
         <Button x:Name="playBtn" HorizontalAlignment="Left" Margin="348,381,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" RenderTransformOrigin="0.5,1" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
                 <Image Source="assetts/icons/play.png" Height="24" Width="24"/>
@@ -30,15 +30,15 @@
                 <Image Source="assetts/icons/previous.png" Height="24" Width="24"/>
             </StackPanel>
         </Button>
-        <Image x:Name="musicImg" HorizontalAlignment="Left" Height="230" Margin="255,50,0,0" VerticalAlignment="Top" Width="267" Source="assetts/cassette.jpg"/>
-        <Label x:Name="timeCounter" Content="" HorizontalAlignment="Left" Margin="447,336,0,0" VerticalAlignment="Top" Width="75"/>
-        <Label x:Name="songTitle" Content="" HorizontalContentAlignment="Center" Margin="255,280,270,0" VerticalAlignment="Top"/>
-        <Button x:Name="fileDialog" HorizontalAlignment="Left" Margin="10,381,0,0" VerticalAlignment="Top" Width="75" Click="fileDialog_Click" RenderTransformOrigin="0,1" Background="Transparent" BorderBrush="Transparent">
+        <Image x:Name="musicImg" HorizontalAlignment="Left" Height="230" Margin="255,50,0,0" VerticalAlignment="Top" Width="267" Source="assetts/cassette.jpg" Stretch="Fill"/>
+        <Label x:Name="timeCounter" Content="" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="255,336,0,0" VerticalAlignment="Top" Width="267" FontWeight="Bold" FontSize="18"/>
+        <Label x:Name="songTitle" Content="" HorizontalContentAlignment="Center" Margin="255,280,270,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="24"/>
+        <Button x:Name="fileDialog" HorizontalAlignment="Left" Margin="10,381,0,0" VerticalAlignment="Top" Width="143" Click="fileDialog_Click" RenderTransformOrigin="0,1" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
                 <Image Source="{StaticResource Browse}" Height="24" Width="24"/>
             </StackPanel>
         </Button>
-        <ListBox x:Name="songMenu" HorizontalAlignment="Left" Height="321" Margin="10,10,0,0" VerticalAlignment="Top" Width="143" RenderTransformOrigin="0,0.5" SelectionChanged="SongMenu_SelectionChanged" MouseDoubleClick="songMenu_MouseDoubleClick"/>
+        <ListBox x:Name="songMenu" HorizontalAlignment="Left" Height="360" Margin="10,10,0,0" VerticalAlignment="Top" Width="143" RenderTransformOrigin="0,0.5" SelectionChanged="SongMenu_SelectionChanged" MouseDoubleClick="songMenu_MouseDoubleClick"/>
         <Button x:Name="play" Content="Select" HorizontalAlignment="Left" Margin="-168,343,0,0" VerticalAlignment="Top" Width="75" Click="selectSong" RenderTransformOrigin="0,1"/>
         <Slider x:Name="volSlider" HorizontalAlignment="Left" Margin="656,389,0,0" VerticalAlignment="Top" Width="126" Value="100" RenderTransformOrigin="1,1" ValueChanged="VolSlider_ValueChanged" Maximum="100"/>
         <Label Content="Volume" HorizontalAlignment="Left" Margin="656,363,0,0" VerticalAlignment="Top" RenderTransformOrigin="1,1"/>
@@ -48,6 +48,7 @@
                 <Image x:Name="muteImg" Source="{StaticResource VolumeHigh}" Height="24" Width="24" x:FieldModifier="public"/>
             </StackPanel>
         </Button>
+        <Label x:Name="ArtistName" Content="" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="255,310,0,0" VerticalAlignment="Top" Width="267"/>
 
     </Grid>
 </Window>

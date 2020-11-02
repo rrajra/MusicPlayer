@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -35,6 +36,8 @@ namespace BetterMusic
      * Pause / play functionality
      * Volume slider
      * Tray functionality
+     * Get avg or most amount of pixels, take that color, darken it, apply to background
+     *   ^ somewhat done, just gets one pixel thusfar
      */
 
     public partial class MainWindow : Window
@@ -46,6 +49,8 @@ namespace BetterMusic
         //This is recordName, but with / and extension removed
         public string formatted;
         public bool newSong;
+
+        public BitmapImage albumArt;
         
         //Sound stuff
         public double volume = 100;
@@ -78,10 +83,10 @@ namespace BetterMusic
         public MainWindow()
         {
             InitializeComponent();
-            recordLocation = @"C:\Users\Matt\Desktop\MusicFile";
-            defaultDir = @"C:\Users\Matt\Desktop\MusicFile";
-            recordName = @"\sprung.mp3";
-            startupFetch();
+            //recordLocation = defaultDir;
+            //defaultDir = @"C:\Users\Matt\Desktop\MusicFile";
+            recordName = "";
+            //startupFetch();
             playerNew.PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(playerNew_PlayStateChange);
             tmr.Interval = 10;
             tmr.Stop();
@@ -122,9 +127,9 @@ namespace BetterMusic
             myTimer.Interval = 1000;
             myTimer.Start();
             //This is logic to resume song
-            if (currentTime != 0)
+            if (currentTime != 0 && newSong != true)
             {
-                playerNew.URL = recordLocation + recordName;
+                playerNew.URL = musicDirectory + recordName;
                 playerNew.controls.play();
                 playerNew.controls.currentPosition = currentTime;
                 playingMusic = true;
@@ -133,41 +138,56 @@ namespace BetterMusic
             // This will start song from beginning
             else
             {
-                playerNew.URL = recordLocation + recordName;
+                playerNew.URL = musicDirectory + recordName;
                 playerNew.controls.play();
                 playingMusic = true;
                 newSong = true;
             }
             if (newSong == true)
             {
-                //MessageBox.Show(newSong.ToString());
-                //Formats the song title, removes backslash and extension
-                formatted = recordName;
-                formatted = formatted.Substring(0, recordName.Length - 4);
-                formatted = (formatted.Remove(0, 1));
-                this.Dispatcher.Invoke(() =>
-                {
-                    songTitle.Content = formatted;
-                    playBtn.Content = FindResource("pause");
-                });
-
-                //MessageBox.Show(recordLocation + recordName);
-                TagLib.File tagLibSong = TagLib.File.Create(recordLocation + recordName);
-                var convert = tagLibSong.Properties.Duration;
-                songDuration = convert.TotalSeconds;
-                songDurMin = convert.TotalMinutes;
-                songDurMin = Math.Round(songDurMin, 2);
-                if (songDuration == 0)
-                {
-                    MessageBox.Show("Something is wrong with this audiofile. The file will attempt to play, however issues may arise. Some features will not work. Please fix the file to have it run as intended.");
-                }
-                //MessageBox.Show(songDuration.ToString());
-
                 try
                 {
-                    TagLib.File tagLibFile = TagLib.File.Create(recordLocation + recordName);
+                    //MessageBox.Show(newSong.ToString());
+                    //Formats the song title, removes backslash and extension
+                    formatted = recordName;
+                    formatted = formatted.Substring(0, recordName.Length - 4);
+                    formatted = (formatted.Remove(0, 1));
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        songTitle.Content = formatted;
+                        playBtn.Content = FindResource("pause");
+                    });
+                }
+                catch
+                {
+                }
+
+                //MessageBox.Show(recordLocation + recordName);
+                try
+                {
+                    TagLib.File tagLibSong = TagLib.File.Create(musicDirectory + recordName);
+                    var convert = tagLibSong.Properties.Duration;
+                    songDuration = convert.TotalSeconds;
+                    songDurMin = convert.TotalMinutes;
+                    songDurMin = Math.Round(songDurMin, 2);
+                    if (songDuration == 0)
+                    {
+                        MessageBox.Show("Something is wrong with this audiofile. The file will attempt to play, however issues may arise. Some features will not work. Please fix the file to have it run as intended.");
+                    }
+                    //MessageBox.Show(songDuration.ToString());
+                }
+                catch
+                {
+                    MessageBox.Show("Directory not found!");
+                    //TODO - logic to remove null items from list
+                    return;
+                }
+                try
+                {
+                    TagLib.File tagLibFile = TagLib.File.Create(musicDirectory + recordName);
                     //var songPic = tagLibFile.Tag.Pictures;
 
+                    ArtistName.Content = tagLibFile.Tag.FirstAlbumArtist;
                     TagLib.IPicture pic = tagLibFile.Tag.Pictures[0];
                     MemoryStream ms = new MemoryStream(pic.Data.Data);
                     ms.Seek(0, SeekOrigin.Begin);
@@ -177,9 +197,12 @@ namespace BetterMusic
                     bitmap.BeginInit();
                     bitmap.StreamSource = ms;
                     bitmap.EndInit();
+                    albumArt = bitmap;
 
                     // Create a System.Windows.Controls.Image control
                     musicImg.Source = bitmap;
+
+                    GetPixel();
                 }
                 catch
                 {
@@ -276,7 +299,6 @@ namespace BetterMusic
                 recordName = @"\" + songs[index + 1];
                 playerNew.controls.pause();
                 currentTime = 0;
-                MessageBox.Show("Name: " + recordName);
                 playMusic();
             }
             //Reverts back to first song in list
@@ -310,7 +332,11 @@ namespace BetterMusic
             {
                 currentTime = playerNew.controls.currentPosition;
                 var currentTimeTrim = currentTime.ToString("0.0");
-                timeCounter.Content = currentTimeTrim + "/" + songDurMin;
+                //var convertedToString = currentTimeTrim.ToString();
+                //convertedToString = currentTimeTrim.Replace(".", ":");
+                var songDurString = songDurMin.ToString();
+                var replaced = songDurString.Replace(".", ":");
+                timeCounter.Content = currentTimeTrim + "/" + replaced;
                 progressSlider.Maximum = songDuration;
                 progressSlider.Value = currentTime;
             });
@@ -324,6 +350,8 @@ namespace BetterMusic
         }
 
             //Finds all valid songs in a chosen directory
+
+            //*TODO* Sort Songs by album instead of name
             public void fetchSongs()
             {
             try
@@ -333,36 +361,142 @@ namespace BetterMusic
                 MessageBox.Show(musicDirectory);
                 foreach (FileInfo file in Files)
                 {
-                    MessageBox.Show(file.ToString());
+                    //MessageBox.Show(file.ToString());
                     songs.Add(file.ToString());
                 }
             }
             catch
             {
-                
             }
-                songMenu.ItemsSource = songs;
+            RefreshSongs();
+            songMenu.ItemsSource = songs;
+            songMenu.Items.Refresh();
+            songMenu.InvalidateArrange();
+            songMenu.UpdateLayout();
             }
 
-        //Finds all valid songs in a chosen directory
-        public void startupFetch()
+        public void RefreshSongs()
         {
-            DirectoryInfo d = new DirectoryInfo(defaultDir);
-            FileInfo[] Files = d.GetFiles("*.mp3");
-            foreach (FileInfo file in Files)
+            //Going backwards ensures all files are removed
+            for (int i = songs.Count- 1; i >= 0; i--)
             {
-                songs.Add(file.ToString());
-            }
-            songMenu.ItemsSource = songs;
-            try
-            {
-                recordName = @"\" + songs[0];
-            }
-            catch
-            {
-                Console.WriteLine("No valid songs found.");
+                //Check file location
+                var song = songs[i];
+                var combined = musicDirectory + @"\" + song;
+                //MessageBox.Show(combined);
+                FileInfo stream = new FileInfo(combined);
+                if(stream.Exists)
+                {
+                }
+                else
+                {
+                    //Code to remove from list.
+                    songs.RemoveAt(i);
+                }
             }
         }
+
+        //Finds all valid songs in a chosen directory
+        /** public void startupFetch()
+         {
+             DirectoryInfo d = new DirectoryInfo();
+             FileInfo[] Files = d.GetFiles("*.mp3");
+             foreach (FileInfo file in Files)
+             {
+                 songs.Add(file.ToString());
+             }
+             songMenu.ItemsSource = songs;
+             try
+             {
+                 recordName = @"\" + songs[0];
+             }
+             catch
+             {
+                 Console.WriteLine("No valid songs found.");
+             }
+         }
+         */
+
+        //Converts BitmapImage(WPF) to Bitmap(WinForms)
+        private Bitmap BitmapImage2Bitmap(BitmapImage bitmapImage)
+        {
+            //BitmapImage bitmapImage = new BitmapImage(albumArt);
+
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(bitmapImage));
+                enc.Save(outStream);
+                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(outStream);
+
+                return new Bitmap(bitmap);
+            }
+        }
+        
+        //Code to get color of album, and then display it,
+        //In background
+        public void GetPixel()
+        {
+            //Colors
+            float red;
+            float green;
+            float blue;
+
+            //This is the converted bitmap(winforms)
+            var bitmap = BitmapImage2Bitmap(albumArt);
+            //This is RGBA code for background color
+            System.Drawing.Color pixelColor = bitmap.GetPixel(50, 50);
+            red = pixelColor.R;
+            green = pixelColor.G;
+            blue = pixelColor.B;
+
+            // >1 lighter, <1 darker
+            float correctionFactor = 0.5f;
+            red *= correctionFactor;
+            green *= correctionFactor;
+            blue *= correctionFactor;
+
+            //Ensures RGB values cannot be greater than 255, lower than 0
+            #region Color Value Checks
+            if (red > 255)
+            {
+                red = 255;
+            }
+            else if(red < 0)
+            {
+                red = 0;
+            }
+            if (green > 255)
+            {
+                green = 255;
+            }
+            else if (green < 0)
+            {
+                green = 0;
+            }
+            if (blue > 255)
+            {
+                blue = 255;
+            }
+            else if (blue < 0)
+            {
+                blue = 0;
+            }
+            #endregion
+
+            //Converter to turn color into brush
+            var converter = new System.Windows.Media.BrushConverter();
+            //Darkens color so it doesnt blend into album art
+            //System.Drawing.Color newColor = (int)(pixelColor.A * 50, pixelColor.G *50);
+            var darkened = System.Drawing.Color.FromArgb(pixelColor.A, (int)red, (int)green, (int)blue);
+            //Converts RGBA colorcode to html color code
+            string htmlColor = ColorTranslator.ToHtml(darkened);
+            //Color is then turned into a brush
+            var brush = (System.Windows.Media.Brush)converter.ConvertFrom(htmlColor);
+            //Finally the background color is set to brush color
+            bgGrid.Background = brush;
+        }
+
 
         // Clicked Backwards btn
         private void backClick(object sender, RoutedEventArgs e)
@@ -378,18 +512,21 @@ namespace BetterMusic
 
         private void selectSong(object sender, RoutedEventArgs e)
         {
-            try
-            {
+           // try
+            //{
                 playerNew.controls.pause();
+                MessageBox.Show("pausing.");
                 string selected = songMenu.SelectedValue.ToString();
+                MessageBox.Show(selected);
                 recordName = @"\" + selected;
+                MessageBox.Show(selected);
                 currentTime = 0;
                 playMusic();
-            }
-            catch
-            {
-                MessageBox.Show("No song selected");
-            }
+            //}
+            //catch
+            //{
+             //  MessageBox.Show("No song selected");
+           // }
         }
 
         private void SkipSong(object sender, RoutedEventArgs e)
@@ -405,6 +542,7 @@ namespace BetterMusic
                 string selected = songMenu.SelectedValue.ToString();
                 recordName = @"\" + selected;
                 currentTime = 0;
+                newSong = true;
                 playMusic();
             }
             catch
@@ -510,6 +648,37 @@ namespace BetterMusic
             {
 
             }
+        }
+
+        private void Better_Music_KeyUp(object sender, KeyEventArgs e)
+        {
+            #region Play/pause
+            if(e.Key == Key.Space)
+            {
+                if(playingMusic == true)
+                {
+                    pauseMusic();
+                }
+                else if(playingMusic == false)
+                {
+                    playMusic();
+                }
+                else
+                {
+                    pauseMusic();
+                }
+            }
+            #endregion
+            #region Skip / Reverse
+            if (e.Key == Key.Right)
+            {
+                SkipSong();
+            }
+            if(e.Key == Key.Left)
+            {
+                Backwards();
+            }
+            #endregion
         }
     }
 }
