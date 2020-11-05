@@ -58,8 +58,19 @@ namespace BetterMusic
 
         public BitmapImage albumArt;
 
+        #region Icons
+        public string folderIcon;
+        public string mnoteIcon;
         public string muteIcon;
-
+        public string nextIcon;
+        public string pauseIcon;
+        public string playIcon;
+        public string plusIcon;
+        public string previousIcon;
+        public string volumehighIcon;
+        public string volumelowIcon;
+        public string musicnoteIcon;
+        #endregion
 
         //Sound stuff
         public double volume = 100;
@@ -137,8 +148,6 @@ namespace BetterMusic
             myTimer.Interval = 1000;
             myTimer.Start();
             //This is logic to resume song
-            MessageBox.Show("new song " + newSong);
-            MessageBox.Show("currenTime " + currentTime);
             if (currentTime != 0 && newSong != true)
             {
                 if(isDragged != true)
@@ -160,7 +169,6 @@ namespace BetterMusic
                 // Will play song normally as it wasnt dragged on
                 if (isDragged != true)
                 {
-                    MessageBox.Show("if");
                     playerNew.URL = musicDirectory + recordName;
                     playerNew.controls.play();
                     playingMusic = true;
@@ -169,7 +177,6 @@ namespace BetterMusic
                 // Song was dragged onto player
                 else
                 {
-                    MessageBox.Show("Else");
                     playerNew.URL = dragDropDir + recordName;
                     playerNew.controls.play();
                     playingMusic = true;
@@ -189,7 +196,8 @@ namespace BetterMusic
                     {
                         songTitle.Content = formatted;
                         //musicTitle.text
-                        playBtn.Content = FindResource("pause");
+                        //This was being set twice
+                        //playBtn.Content = FindResource("pause");
                     });
                 }
                 catch
@@ -292,7 +300,7 @@ namespace BetterMusic
             this.Dispatcher.Invoke(() =>
             {
                 //MessageBox.Show(muteIcon + " " + muteIcon.ToString());
-                playBtn.Content = FindResource("pause");
+                playBtn.Content = FindResource(pauseIcon);
             });
             newSong = false;
         }
@@ -303,7 +311,7 @@ namespace BetterMusic
             currentTime = playerNew.controls.currentPosition;
             playerNew.controls.pause();
             playingMusic = false;
-            playBtn.Content = FindResource("play");
+            playBtn.Content = FindResource(playIcon);
         }
 
         public void Backwards()
@@ -340,23 +348,26 @@ namespace BetterMusic
             isDragged = false;
             //Try to play next song, if there is no next song
             //Goes to song 0 in list
-            try
+            if (songs.Count > 0)
             {
-                var formattedIndexName = (recordName.Remove(0, 1));
-                int index = songs.FindIndex(str => str.Contains(formattedIndexName)); 
-                recordName = @"\" + songs[index + 1];
-                playerNew.controls.pause();
-                currentTime = 0;
-                playMusic();
-            }
-            //Reverts back to first song in list
-            catch
-            {
-                recordName = @"\" + songs[0];
-                playerNew.controls.pause();
-                currentTime = 0;
-                MessageBox.Show("Name: " + recordName + " first song");
-                playMusic();
+                try
+                {
+                    var formattedIndexName = (recordName.Remove(0, 1));
+                    int index = songs.FindIndex(str => str.Contains(formattedIndexName));
+                    recordName = @"\" + songs[index + 1];
+                    playerNew.controls.pause();
+                    currentTime = 0;
+                    playMusic();
+                }
+                //Reverts back to first song in list
+                catch
+                {
+                    recordName = @"\" + songs[0];
+                    playerNew.controls.pause();
+                    currentTime = 0;
+                    MessageBox.Show("Name: " + recordName + " first song");
+                    playMusic();
+                }
             }
         }
 
@@ -727,7 +738,7 @@ namespace BetterMusic
                 {
                     muted = false;
                     //Change image to volume low
-                    mute.Content = FindResource("volumelow");
+                    mute.Content = FindResource(volumelowIcon);
                     //mute.Content = FindResource("volumelow");
                 }
                 //High volume
@@ -735,26 +746,26 @@ namespace BetterMusic
                 {
                     muted = false;
                     //Change image to volume high
-                    mute.Content = FindResource("volumehigh");
+                    mute.Content = FindResource(volumehighIcon);
                 }
                 //Muted
                 else if (playerNew.settings.volume == 0)
                 {
                     muted = true;
                     //Change image to muted
-                    mute.Content = FindResource("mute");
+                    mute.Content = FindResource(muteIcon);
                 }
                 else if (volume == 0)
                 {
                     muted = true;
                     //Change image to muted
-                    mute.Content = FindResource("mute");
+                    mute.Content = FindResource(muteIcon);
                 }
                 else if(muted == true)
                 {
                     muted = true;
                     //Change image to muted
-                    mute.Content = FindResource("mute");
+                    mute.Content = FindResource(muteIcon);
                 }
             }
             catch
@@ -781,14 +792,50 @@ namespace BetterMusic
 
         public void assignResource()
         {
+            //Light icons
             if(whitecons == true)
             {
-                muteIcon = "next";
+                folderIcon = "folderwhite";
+                muteIcon = "mutewhite";
+                mnoteIcon = "musicnotewhite";
+                nextIcon = "nextwhite";
+                pauseIcon = "pausewhite";
+                playIcon = "playwhite";
+                plusIcon = "pluswhite";
+                previousIcon = "backwhite";
+                volumehighIcon = "volumehighwhite";
+                volumelowIcon = "volumelowwhite";
+                musicnoteIcon = "musicnotewhite";
+                setAll();
             }
+            //Darker icons
             else
             {
-
+                folderIcon = "folder";
+                muteIcon = "mute";
+                mnoteIcon = "musicnote";
+                nextIcon = "next";
+                pauseIcon = "pause";
+                playIcon = "play";
+                plusIcon = "plus";
+                previousIcon = "back";
+                volumehighIcon = "volumehigh";
+                volumelowIcon = "volumelow";
+                musicnoteIcon = "musicnotewhite";
             }
+            setAll();
+        }
+
+        //Sets all to white
+        //So those that refresh are refreshed
+        public void setAll()
+        {
+            mute.Content = FindResource(volumehighIcon);
+            playBtn.Content = FindResource(pauseIcon);
+            skipBay.Content = FindResource(nextIcon);
+            BackBtn.Content = FindResource(previousIcon);
+            MusicTab.Content = FindResource(musicnoteIcon);
+            fileDialog.Content = FindResource(folderIcon);
         }
 
         private void pictureBox_Paint(object sender, WinForms.PaintEventArgs e)

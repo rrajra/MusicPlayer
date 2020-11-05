@@ -1,12 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:BetterMusic.assetts">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- White Images -->
     <Image x:Key="PlayBtn" Source="assetts/icons/folder.png" Height="24" Width="24"/>
     <Image x:Key="PauseBtn" Source="assetts/icons/folder.png" Height="24" Width="24"/>
     <Image x:Key="Mute" Source="assetts/icons/folder.png" Height="24" Width="24"/>
-    <BitmapImage x:Key="Muted" UriSource="/assetts/icons/mute.png"/>
     <BitmapImage x:Key="PlayBtnn" UriSource="/assetts/icons/play.png"/>
     <BitmapImage x:Key="PauseBtnn" UriSource="/assetts/icons/pause.png"/>
     <BitmapImage x:Key="VolumeHigh" UriSource="/assetts/icons/volumehigh.png"/>
@@ -14,6 +12,7 @@
     <BitmapImage x:Key="Browse" UriSource="/assetts/icons/folder.png"/>
     <BitmapImage x:Key="MusicNote" UriSource="/assetts/icons/musicnote.png"/>
     <BitmapImage x:Key="plus" UriSource="/assetts/icons/plus.png"/>
+    <!--White-->
     <BitmapImage x:Key="MutedWhite" UriSource="/assetts/icons/mutewhite.png"/>
     <BitmapImage x:Key="PlayBtnnWhite" UriSource="/assetts/icons/playwhite.png"/>
     <BitmapImage x:Key="PauseBtnnWhite" UriSource="/assetts/icons/pausewhite.png"/>

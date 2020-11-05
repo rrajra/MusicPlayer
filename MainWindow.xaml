@@ -10,9 +10,21 @@
         <Image x:Key="play" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/play.png" Height="24" Width="24"/>
         <Image x:Key="pause" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/pause.png" Height="24" Width="24"/>
         <Image x:Key="next" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/next.png" Height="24" Width="24"/>
+        <Image x:Key="back" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/previous.png" Height="24" Width="24"/>
         <Image x:Key="mute" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/mute.png" Height="24" Width="24"/>
         <Image x:Key="volumehigh" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/volumehigh.png" Height="24" Width="24"/>
         <Image x:Key="volumelow" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/volumelow.png" Height="24" Width="24"/>
+        <Image x:Key="folder" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/folder.png" Height="24" Width="24"/>
+        <!--White-->
+        <Image x:Key="playwhite" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/playwhite.png" Height="24" Width="24"/>
+        <Image x:Key="pausewhite" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/pausewhite.png" Height="24" Width="24"/>
+        <Image x:Key="nextwhite" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/nextwhite.png" Height="24" Width="24"/>
+        <Image x:Key="backwhite" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/previouswhite.png" Height="24" Width="24"/>
+        <Image x:Key="mutewhite" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/mutewhite.png" Height="24" Width="24"/>
+        <Image x:Key="volumehighwhite" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/volumehighwhite.png" Height="24" Width="24"/>
+        <Image x:Key="volumelowwhite" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/volumelowwhite.png" Height="24" Width="24"/>
+        <Image x:Key="musicnotewhite" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/musicnotewhite.png" Height="24" Width="24"/>
+        <Image x:Key="folderwhite" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/folderwhite.png" Height="24" Width="24"/>
     </Window.Resources>
     <Grid x:Name="bgGrid" DragEnter="BgGrid_DragEnter" DragLeave="BgGrid_DragLeave">
         <Button x:Name="playBtn" HorizontalAlignment="Left" Margin="348,381,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" RenderTransformOrigin="0.5,1" Background="Transparent" BorderBrush="Transparent">
@@ -20,12 +32,12 @@
                 <Image Source="assetts/icons/play.png" Height="24" Width="24"/>
             </StackPanel>
         </Button>
-        <Button HorizontalAlignment="Left" Margin="447,381,0,0" VerticalAlignment="Top" Width="75" Click="SkipSong" RenderTransformOrigin="0.5,1" Background="Transparent" BorderBrush="Transparent">
+        <Button x:Name="skipBay" HorizontalAlignment="Left" Margin="447,381,0,0" VerticalAlignment="Top" Width="75" Click="SkipSong" RenderTransformOrigin="0.5,1" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
                 <Image Source="assetts/icons/next.png" Height="24" Width="24"/>
             </StackPanel>
         </Button>
-        <Button HorizontalAlignment="Left" Margin="255,381,0,0" VerticalAlignment="Top" Width="75" Click="backClick" RenderTransformOrigin="0.5,1" Background="Transparent" BorderBrush="Transparent">
+        <Button x:Name="BackBtn" HorizontalAlignment="Left" Margin="255,381,0,0" VerticalAlignment="Top" Width="75" Click="backClick" RenderTransformOrigin="0.5,1" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
                 <Image Source="assetts/icons/previous.png" Height="24" Width="24"/>
             </StackPanel>
