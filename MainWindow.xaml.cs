@@ -46,12 +46,21 @@ namespace BetterMusic
         public string recordLocation;
         public string recordName;
         public string defaultDir;
+        public string dragDropDir;
         //This is recordName, but with / and extension removed
         public string formatted;
         public bool newSong;
+        public bool whitecons;
+
+        public bool isDragged;
+
+        public int activeTab;
 
         public BitmapImage albumArt;
-        
+
+        public string muteIcon;
+
+
         //Sound stuff
         public double volume = 100;
         public bool muted = false;
@@ -83,6 +92,7 @@ namespace BetterMusic
         public MainWindow()
         {
             InitializeComponent();
+            this.AllowDrop = true;
             //recordLocation = defaultDir;
             //defaultDir = @"C:\Users\Matt\Desktop\MusicFile";
             recordName = "";
@@ -127,9 +137,18 @@ namespace BetterMusic
             myTimer.Interval = 1000;
             myTimer.Start();
             //This is logic to resume song
+            MessageBox.Show("new song " + newSong);
+            MessageBox.Show("currenTime " + currentTime);
             if (currentTime != 0 && newSong != true)
             {
-                playerNew.URL = musicDirectory + recordName;
+                if(isDragged != true)
+                {
+                    playerNew.URL = musicDirectory + recordName;
+                }
+                else
+                {
+                    playerNew.URL = dragDropDir + recordName;
+                }
                 playerNew.controls.play();
                 playerNew.controls.currentPosition = currentTime;
                 playingMusic = true;
@@ -138,10 +157,24 @@ namespace BetterMusic
             // This will start song from beginning
             else
             {
-                playerNew.URL = musicDirectory + recordName;
-                playerNew.controls.play();
-                playingMusic = true;
-                newSong = true;
+                // Will play song normally as it wasnt dragged on
+                if (isDragged != true)
+                {
+                    MessageBox.Show("if");
+                    playerNew.URL = musicDirectory + recordName;
+                    playerNew.controls.play();
+                    playingMusic = true;
+                    newSong = true;
+                }
+                // Song was dragged onto player
+                else
+                {
+                    MessageBox.Show("Else");
+                    playerNew.URL = dragDropDir + recordName;
+                    playerNew.controls.play();
+                    playingMusic = true;
+                    newSong = true;
+                }
             }
             if (newSong == true)
             {
@@ -155,6 +188,7 @@ namespace BetterMusic
                     this.Dispatcher.Invoke(() =>
                     {
                         songTitle.Content = formatted;
+                        //musicTitle.text
                         playBtn.Content = FindResource("pause");
                     });
                 }
@@ -165,11 +199,22 @@ namespace BetterMusic
                 //MessageBox.Show(recordLocation + recordName);
                 try
                 {
-                    TagLib.File tagLibSong = TagLib.File.Create(musicDirectory + recordName);
-                    var convert = tagLibSong.Properties.Duration;
-                    songDuration = convert.TotalSeconds;
-                    songDurMin = convert.TotalMinutes;
-                    songDurMin = Math.Round(songDurMin, 2);
+                    if (isDragged != true)
+                    {
+                        TagLib.File tagLibSong = TagLib.File.Create(musicDirectory + recordName);
+                        var convert = tagLibSong.Properties.Duration;
+                        songDuration = convert.TotalSeconds;
+                        songDurMin = convert.TotalMinutes;
+                        songDurMin = Math.Round(songDurMin, 2);
+                    }
+                    else
+                    {
+                        TagLib.File tagLibSong = TagLib.File.Create(dragDropDir + recordName);
+                        var convert = tagLibSong.Properties.Duration;
+                        songDuration = convert.TotalSeconds;
+                        songDurMin = convert.TotalMinutes;
+                        songDurMin = Math.Round(songDurMin, 2);
+                    }
                     if (songDuration == 0)
                     {
                         MessageBox.Show("Something is wrong with this audiofile. The file will attempt to play, however issues may arise. Some features will not work. Please fix the file to have it run as intended.");
@@ -246,6 +291,7 @@ namespace BetterMusic
             }
             this.Dispatcher.Invoke(() =>
             {
+                //MessageBox.Show(muteIcon + " " + muteIcon.ToString());
                 playBtn.Content = FindResource("pause");
             });
             newSong = false;
@@ -267,6 +313,7 @@ namespace BetterMusic
             {
                 try
                 {
+                    isDragged = false;
                     newSong = true;
                     var formattedIndexName = (recordName.Remove(0, 1));
                     int index = songs.FindIndex(str => str.Contains(formattedIndexName));
@@ -290,6 +337,7 @@ namespace BetterMusic
         public void SkipSong()
         {
             newSong = true;
+            isDragged = false;
             //Try to play next song, if there is no next song
             //Goes to song 0 in list
             try
@@ -331,6 +379,16 @@ namespace BetterMusic
             this.Dispatcher.Invoke(() =>
             {
                 currentTime = playerNew.controls.currentPosition;
+                // Greater than 60, convert to mins
+                if(currentTime >= 60)
+                {
+
+                }
+                //Less than 60, stay at seconds
+                else if (currentTime < 60)
+                {
+
+                }
                 var currentTimeTrim = currentTime.ToString("0.0");
                 //var convertedToString = currentTimeTrim.ToString();
                 //convertedToString = currentTimeTrim.Replace(".", ":");
@@ -344,9 +402,16 @@ namespace BetterMusic
 
         private void fileDialog_Click(object sender, RoutedEventArgs e)
         {
-            folderBrowse.ShowDialog();
-            musicDirectory = folderBrowse.SelectedPath;
-            fetchSongs();
+            // Makes sure nothing happens if they close out before choosing a dir
+            System.Windows.Forms.DialogResult result = folderBrowse.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                musicDirectory = folderBrowse.SelectedPath;
+                fetchSongs();
+            }
+            else
+            {
+            }
         }
 
             //Finds all valid songs in a chosen directory
@@ -441,6 +506,7 @@ namespace BetterMusic
             float red;
             float green;
             float blue;
+            float alpha;
 
             //This is the converted bitmap(winforms)
             var bitmap = BitmapImage2Bitmap(albumArt);
@@ -449,12 +515,25 @@ namespace BetterMusic
             red = pixelColor.R;
             green = pixelColor.G;
             blue = pixelColor.B;
+            alpha = pixelColor.A;
 
             // >1 lighter, <1 darker
             float correctionFactor = 0.5f;
+            // if background is black, lightens it instead
+            if (red <= 25 && green <= 25 && green <= 25)
+            {
+                MessageBox.Show(red.ToString());
+                var redConv = red;
+                redConv *= 2.0f;
+                MessageBox.Show("Red converted " + redConv.ToString());
+                //This currently bugs it out tho
+                MessageBox.Show("Making lighter");
+                correctionFactor = 2.0f;
+            }
             red *= correctionFactor;
             green *= correctionFactor;
             blue *= correctionFactor;
+            alpha *= correctionFactor;
 
             //Ensures RGB values cannot be greater than 255, lower than 0
             #region Color Value Checks
@@ -464,7 +543,7 @@ namespace BetterMusic
             }
             else if(red < 0)
             {
-                red = 0;
+                red = 1;
             }
             if (green > 255)
             {
@@ -472,7 +551,7 @@ namespace BetterMusic
             }
             else if (green < 0)
             {
-                green = 0;
+                green = 1;
             }
             if (blue > 255)
             {
@@ -480,23 +559,52 @@ namespace BetterMusic
             }
             else if (blue < 0)
             {
-                blue = 0;
+                blue = 1;
             }
             #endregion
+
+            MessageBox.Show(red.ToString() + " " + green.ToString() + " " + blue.ToString());
 
             //Converter to turn color into brush
             var converter = new System.Windows.Media.BrushConverter();
             //Darkens color so it doesnt blend into album art
             //System.Drawing.Color newColor = (int)(pixelColor.A * 50, pixelColor.G *50);
-            var darkened = System.Drawing.Color.FromArgb(pixelColor.A, (int)red, (int)green, (int)blue);
+            var darkened = System.Drawing.Color.FromArgb(200, (int)red, (int)green, (int)blue);
             //Converts RGBA colorcode to html color code
             string htmlColor = ColorTranslator.ToHtml(darkened);
             //Color is then turned into a brush
             var brush = (System.Windows.Media.Brush)converter.ConvertFrom(htmlColor);
             //Finally the background color is set to brush color
             bgGrid.Background = brush;
-        }
+            songMenu.Background = brush;
 
+            // Counting the perceptive luminance - human eye favors green color... 
+            double luminance = (0.299 * red + 0.587 * green + 0.114 * blue) / 255;
+
+
+            if (luminance > 0.5)
+            {
+                // bright colors - black font
+                songTitle.Foreground = System.Windows.Media.Brushes.Black;
+                ArtistName.Foreground = System.Windows.Media.Brushes.Black;
+                volSlide.Foreground = System.Windows.Media.Brushes.Black;
+                timeCounter.Foreground = System.Windows.Media.Brushes.Black;
+                songMenu.Foreground = System.Windows.Media.Brushes.Black;
+                whitecons = false;
+                assignResource();
+            }
+            else
+            {
+                // dark colors - white font
+                songTitle.Foreground = System.Windows.Media.Brushes.White;
+                ArtistName.Foreground = System.Windows.Media.Brushes.White;
+                volSlide.Foreground = System.Windows.Media.Brushes.White;
+                timeCounter.Foreground = System.Windows.Media.Brushes.White;
+                songMenu.Foreground = System.Windows.Media.Brushes.White;
+                whitecons = true;
+                assignResource();
+            }
+        }
 
         // Clicked Backwards btn
         private void backClick(object sender, RoutedEventArgs e)
@@ -543,6 +651,11 @@ namespace BetterMusic
                 recordName = @"\" + selected;
                 currentTime = 0;
                 newSong = true;
+                isDragged = false;
+                // This attempted to change color of selected song
+                // However it seems listbox doesn't support it.
+                //var item = songMenu.SelectedItem;
+                //item = System.Windows.Media.Brushes.LightSkyBlue;
                 playMusic();
             }
             catch
@@ -650,6 +763,50 @@ namespace BetterMusic
             }
         }
 
+        public void TabManager()
+        {
+            // 1 = Music 
+            if(activeTab == 1)
+            {
+                MusicTab.Background = System.Windows.Media.Brushes.LightSkyBlue;
+                fileDialog.Background = null;
+            }
+            // 2 - Album
+            else
+            {
+                MusicTab.Background = null;
+                fileDialog.Background = System.Windows.Media.Brushes.LightSkyBlue;
+            }
+        }
+
+        public void assignResource()
+        {
+            if(whitecons == true)
+            {
+                muteIcon = "next";
+            }
+            else
+            {
+
+            }
+        }
+
+        private void pictureBox_Paint(object sender, WinForms.PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            using (Bitmap bmp = new Bitmap("folder.png"))
+            {
+                // Set the image attribute's color mappings
+                System.Drawing.Imaging.ColorMap[] colorMap = new System.Drawing.Imaging.ColorMap[1];
+                colorMap[0] = new System.Drawing.Imaging.ColorMap();
+                colorMap[0].OldColor = System.Drawing.Color.Black;
+                colorMap[0].NewColor = System.Drawing.Color.Blue;
+                System.Drawing.Imaging.ImageAttributes attr = new System.Drawing.Imaging.ImageAttributes();
+                attr.SetRemapTable(colorMap);
+            }
+        }
+
+        // Key binds to skip / rewind on song
         private void Better_Music_KeyUp(object sender, KeyEventArgs e)
         {
             #region Play/pause
@@ -679,6 +836,58 @@ namespace BetterMusic
                 Backwards();
             }
             #endregion
+        }
+
+        private void MusicTab_Click(object sender, RoutedEventArgs e)
+        {
+            activeTab = 1;
+            TabManager();
+        }
+
+        private void BgGrid_ItemDrag(object sender, DragEventArgs e)
+        {
+            //MessageBox.Show("Drag!");
+        }
+
+        private void BgGrid_DragEnter(object sender, DragEventArgs e)
+        {
+            //MessageBox.Show("Drag!");
+            plusImg.Visibility = Visibility.Visible;
+        }
+
+        private void Better_Music_DragOver(object sender, DragEventArgs e)
+        {
+            //Display drag + drop img
+            //MessageBox.Show("Drag!");
+        }
+
+        private void Better_Music_Drop(object sender, DragEventArgs e)
+        {
+            try
+            {
+                string[] draggedFile = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+                var extension = System.IO.Path.GetExtension(draggedFile[0]);
+                if(extension == ".mp3")
+                {
+                    // Code to make music play
+                    var dir = System.IO.Path.GetDirectoryName(draggedFile[0]);
+                    recordName = @"\" + System.IO.Path.GetFileName(draggedFile[0]);
+                    dragDropDir = dir;
+                    newSong = true;
+                    isDragged = true;
+                    playMusic();
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Filetype not supported.");
+            }
+            plusImg.Visibility = Visibility.Hidden;
+        }
+
+        private void BgGrid_DragLeave(object sender, DragEventArgs e)
+        {
+            plusImg.Visibility = Visibility.Hidden;
         }
     }
 }

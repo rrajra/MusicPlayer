@@ -21,3 +21,5 @@ C:\Users\Matt\source\repos\BetterMusic\BetterMusic\bin\Debug\TagLibSharp.xml
 C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\BetterMusic.csproj.CopyComplete
 C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\App.baml
 C:\Users\Matt\source\repos\BetterMusic\BetterMusic\obj\Debug\assetts\AssetDictionary.baml
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Matt\source\repos\BetterMusic\BetterMusic\bin\Debug\Newtonsoft.Json.xml
