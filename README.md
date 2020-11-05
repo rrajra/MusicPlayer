@@ -5,10 +5,11 @@ Your music, your way. A quick and easy way to play your music.
 # Features 📃
 * Highly optimized
 * Sleek UI
+* Drag & Drop functionality
 * Powerful traybar features
 
 # Screenshots 📸
-
+![Better Image Screenshot](https://abrahams.dev/images/gallery/betterMusic.png)
 
 # Getting Started ✅
 
