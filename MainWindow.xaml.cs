@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Windows.Data.Xml.Dom;
 using WMPLib;
 using WinForms = System.Windows.Forms;
 
@@ -53,6 +54,7 @@ namespace BetterMusic
         public bool whitecons;
 
         public bool isDragged;
+        public bool isMinimized;
 
         public int activeTab;
 
@@ -92,13 +94,8 @@ namespace BetterMusic
         //Timer so music autoplays
         System.Timers.Timer tmr = new System.Timers.Timer();
 
-        //Volume settings
-        private const int APPCOMMAND_VOLUME_MUTE = 0x80000;
-        private const int WM_APPCOMMAND = 0x319;
-        private const int APPCOMMAND_VOLUME_UP = 10 * 65536;
-        private const int APPCOMMAND_VOLUME_DOWN = 9 * 65536;
-        [DllImport("user32.dll")]
-        public static extern IntPtr SendMessageW(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
+        private const String APP_ID = "Microsoft.Samples.BetterMusic";
+
 
         public MainWindow()
         {
@@ -112,7 +109,17 @@ namespace BetterMusic
             tmr.Interval = 10;
             tmr.Stop();
             tmr.Elapsed += tmr_Tick;
-    }
+   //         InitIcons();
+        }
+        public void InitIcons()
+        {
+            mute.Content = FindResource("mute");
+            playBtn.Content = FindResource("play");
+            skipBay.Content = FindResource("next");
+            BackBtn.Content = FindResource("back");
+            //MusicTab.Content = FindResource("musicnote");
+            fileDialog.Content = FindResource("folder");
+        }
 
         void tmr_Tick(object sender, EventArgs e)
         {
@@ -303,6 +310,10 @@ namespace BetterMusic
                 playBtn.Content = FindResource(pauseIcon);
             });
             newSong = false;
+            if(isMinimized == true)
+            {
+                Toaster();
+            }
         }
 
         //Pauses song, and records time music was stopped at
@@ -344,6 +355,17 @@ namespace BetterMusic
 
         public void SkipSong()
         {
+            this.Dispatcher.Invoke(() =>
+            {
+                if (this.WindowState == WindowState.Minimized)
+                {
+                    isMinimized = true;
+                }
+                else
+                {
+                    isMinimized = false;
+                }
+            });
             newSong = true;
             isDragged = false;
             //Try to play next song, if there is no next song
@@ -753,18 +775,42 @@ namespace BetterMusic
                 {
                     muted = true;
                     //Change image to muted
+                    if (whitecons == true)
+                    {
+                        muteIcon = "mutewhite";
+                    }
+                    else
+                    {
+                        muteIcon = "mute";
+                    }
                     mute.Content = FindResource(muteIcon);
                 }
                 else if (volume == 0)
                 {
                     muted = true;
                     //Change image to muted
+                    if (whitecons == true)
+                    {
+                        muteIcon = "mutewhite";
+                    }
+                    else
+                    {
+                        muteIcon = "mute";
+                    }
                     mute.Content = FindResource(muteIcon);
                 }
                 else if(muted == true)
                 {
                     muted = true;
                     //Change image to muted
+                    if (whitecons == true)
+                    {
+                        muteIcon = "mutewhite";
+                    }
+                    else
+                    {
+                        muteIcon = "mute";
+                    }
                     mute.Content = FindResource(muteIcon);
                 }
             }
@@ -790,6 +836,7 @@ namespace BetterMusic
             }
         }
 
+        //Assigns icons
         public void assignResource()
         {
             //Light icons
@@ -830,12 +877,42 @@ namespace BetterMusic
         //So those that refresh are refreshed
         public void setAll()
         {
-            mute.Content = FindResource(volumehighIcon);
+            mute.Content = FindResource(muteIcon);
             playBtn.Content = FindResource(pauseIcon);
             skipBay.Content = FindResource(nextIcon);
             BackBtn.Content = FindResource(previousIcon);
             MusicTab.Content = FindResource(musicnoteIcon);
             fileDialog.Content = FindResource(folderIcon);
+            // This is run so that volume image isn't incorrect
+            setVolImg();
+        }
+
+        //"Toast" aka pop-up notification in Windows
+        //Toast info taken from https://www.michaelcrump.net/pop-toast-notification-in-wpf/
+        private void Toaster()
+        {
+            // Get a toast XML template
+            XmlDocument toastXml = Windows.UI.Notifications.ToastNotificationManager.GetTemplateContent(Windows.UI.Notifications.ToastTemplateType.ToastImageAndText03);
+
+            // Fill in the text elements
+            XmlNodeList stringElements = toastXml.GetElementsByTagName("text");
+            for (int i = 0; i < stringElements.Length; i++)
+            {
+                stringElements[i].AppendChild(toastXml.CreateTextNode(formatted));
+            }
+
+            // Getting Toast Image
+            //String imagePath = "file:///" + Path.GetFullPath("toastImageAndText.png");
+            //XmlNodeList imageElements = toastXml.GetElementsByTagName("image");
+            // Would have to locally save image, and then remove it when it isnt needed. 
+            // Not sure if it's that important though.
+            //imageElements[0].Attributes.GetNamedItem("src").NodeValue = albumArt;
+
+            // Create the toast and attach event listeners
+            Windows.UI.Notifications.ToastNotification toast = new Windows.UI.Notifications.ToastNotification(toastXml);
+
+            // Show the toast. Be sure to specify the AppUserModelId on your application's shortcut!
+            Windows.UI.Notifications.ToastNotificationManager.CreateToastNotifier(APP_ID).Show(toast);
         }
 
         private void pictureBox_Paint(object sender, WinForms.PaintEventArgs e)
@@ -922,6 +999,7 @@ namespace BetterMusic
                     dragDropDir = dir;
                     newSong = true;
                     isDragged = true;
+                    assignResource();
                     playMusic();
                 }
             }
@@ -935,6 +1013,13 @@ namespace BetterMusic
         private void BgGrid_DragLeave(object sender, DragEventArgs e)
         {
             plusImg.Visibility = Visibility.Hidden;
+        }
+
+        private void ProgressSlider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            pauseMusic();
+            currentTime = progressSlider.Value;
+            playMusic();
         }
     }
 }
