@@ -9,7 +9,8 @@ Your music, your way. A quick and easy way to play your music.
 * Powerful traybar features
 
 # Screenshots 📸
-![Better Image Screenshot](https://abrahams.dev/images/gallery/betterMusic.png)
+![Better Music Screenshot](https://abrahams.dev/images/gallery/betterMusic.png)
+![Toast Notification Screenshot](https://abrahams.dev/images/gallery/toast.png)
 
 # Getting Started ✅
 
