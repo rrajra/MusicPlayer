@@ -2,7 +2,7 @@
 
 Your music, your way. A quick and easy way to play your music.
 
-# Getting Started ✅
+## Getting Started ✅
 
 ### Easy 🟢
 Proceed to [abrahams.dev](https://abrahams.dev) for an executable download.
@@ -11,14 +11,14 @@ Proceed to [abrahams.dev](https://abrahams.dev) for an executable download.
 Clone the repository, open BetterMusic.csproj in visual studio, build and run.
 
 
-# Features 📃
+## Features 📃
 * Highly optimized
 * Sleek UI
 * Dynamic background
 * Drag & Drop functionality
 * Toast notifications
 
-# Screenshots 📸
+## Screenshots 📸
 ![Better Music Screenshot](https://abrahams.dev/images/gallery/BetterMusicMigos.png)
 ![Better Music Screenshot](https://abrahams.dev/images/gallery/BetterMusicKanye.png)
 ![Toast Notification Screenshot](https://abrahams.dev/images/gallery/toast.png)
