@@ -5,11 +5,13 @@ Your music, your way. A quick and easy way to play your music.
 # Features 📃
 * Highly optimized
 * Sleek UI
+* Dynamic background
 * Drag & Drop functionality
-* Powerful traybar features
+* Toast notifications
 
 # Screenshots 📸
-![Better Music Screenshot](https://abrahams.dev/images/gallery/betterMusic.png)
+![Better Music Screenshot](https://abrahams.dev/images/gallery/BetterMusicMigos.png)
+![Better Music Screenshot](https://abrahams.dev/images/gallery/BetterMusicKanye.png)
 ![Toast Notification Screenshot](https://abrahams.dev/images/gallery/toast.png)
 
 # Getting Started ✅
