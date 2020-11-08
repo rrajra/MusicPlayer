@@ -94,7 +94,7 @@ namespace BetterMusic
         //Timer so music autoplays
         System.Timers.Timer tmr = new System.Timers.Timer();
 
-        private const String APP_ID = "Microsoft.Samples.BetterMusic";
+        private const String APP_ID = "Better Music";
 
 
         public MainWindow()
@@ -387,7 +387,6 @@ namespace BetterMusic
                     recordName = @"\" + songs[0];
                     playerNew.controls.pause();
                     currentTime = 0;
-                    MessageBox.Show("Name: " + recordName + " first song");
                     playMusic();
                 }
             }
@@ -412,22 +411,27 @@ namespace BetterMusic
             this.Dispatcher.Invoke(() =>
             {
                 currentTime = playerNew.controls.currentPosition;
-                // Greater than 60, convert to mins
-                if(currentTime >= 60)
-                {
-
-                }
-                //Less than 60, stay at seconds
-                else if (currentTime < 60)
-                {
-
-                }
+                var mins = currentTime / 60;
+                var seconds = currentTime % 60;
                 var currentTimeTrim = currentTime.ToString("0.0");
                 //var convertedToString = currentTimeTrim.ToString();
                 //convertedToString = currentTimeTrim.Replace(".", ":");
                 var songDurString = songDurMin.ToString();
                 var replaced = songDurString.Replace(".", ":");
-                timeCounter.Content = currentTimeTrim + "/" + replaced;
+                // Greater than 60, convert to mins
+                if (currentTime >= 60)
+                {
+                    var minsTrim = mins.ToString("00");
+                    var secondsTrim = seconds.ToString("00");
+                    timeCounter.Content = minsTrim + ":" + secondsTrim + "/" + replaced;
+                }
+                //Less than 60, stay at seconds
+                else if (currentTime < 60)
+                {
+                    var secondsTrim = seconds.ToString("00");
+                    timeCounter.Content = "0:" + secondsTrim + "/" + replaced;
+                }
+                //timeCounter.Content = currentTimeTrim + "/" + replaced;
                 progressSlider.Maximum = songDuration;
                 progressSlider.Value = currentTime;
             });
@@ -456,7 +460,6 @@ namespace BetterMusic
             {
                 DirectoryInfo d = new DirectoryInfo(musicDirectory);
                 FileInfo[] Files = d.GetFiles("*.mp3");
-                MessageBox.Show(musicDirectory);
                 foreach (FileInfo file in Files)
                 {
                     //MessageBox.Show(file.ToString());
@@ -555,12 +558,9 @@ namespace BetterMusic
             // if background is black, lightens it instead
             if (red <= 25 && green <= 25 && green <= 25)
             {
-                MessageBox.Show(red.ToString());
                 var redConv = red;
                 redConv *= 2.0f;
-                MessageBox.Show("Red converted " + redConv.ToString());
                 //This currently bugs it out tho
-                MessageBox.Show("Making lighter");
                 correctionFactor = 2.0f;
             }
             red *= correctionFactor;
@@ -596,7 +596,7 @@ namespace BetterMusic
             }
             #endregion
 
-            MessageBox.Show(red.ToString() + " " + green.ToString() + " " + blue.ToString());
+            //MessageBox.Show(red.ToString() + " " + green.ToString() + " " + blue.ToString());
 
             //Converter to turn color into brush
             var converter = new System.Windows.Media.BrushConverter();
@@ -656,11 +656,8 @@ namespace BetterMusic
            // try
             //{
                 playerNew.controls.pause();
-                MessageBox.Show("pausing.");
                 string selected = songMenu.SelectedValue.ToString();
-                MessageBox.Show(selected);
                 recordName = @"\" + selected;
-                MessageBox.Show(selected);
                 currentTime = 0;
                 playMusic();
             //}
@@ -820,6 +817,9 @@ namespace BetterMusic
             }
         }
 
+        //Currently useless
+        //If playlists are eventually added
+        //Functionality would probably go here
         public void TabManager()
         {
             // 1 = Music 
@@ -901,13 +901,22 @@ namespace BetterMusic
                 stringElements[i].AppendChild(toastXml.CreateTextNode(formatted));
             }
 
-            // Getting Toast Image
-            //String imagePath = "file:///" + Path.GetFullPath("toastImageAndText.png");
-            //XmlNodeList imageElements = toastXml.GetElementsByTagName("image");
-            // Would have to locally save image, and then remove it when it isnt needed. 
-            // Not sure if it's that important though.
-            //imageElements[0].Attributes.GetNamedItem("src").NodeValue = albumArt;
+            try
+            {
+                Bitmap bitmap = BitmapImage2Bitmap(albumArt);
+                // Getting Toast Image
+                string appDir = AppDomain.CurrentDomain.BaseDirectory;
+                bitmap.Save(appDir + "toastImg.png", System.Drawing.Imaging.ImageFormat.Png);
 
+                //String imagePath = "file:///"
+                String imagePath = appDir + "toastImg.png";
+                XmlNodeList imageElements = toastXml.GetElementsByTagName("image");
+                imageElements[0].Attributes.GetNamedItem("src").NodeValue = imagePath;
+            }
+            catch
+            {
+                Console.Write("File not found.");
+            }
             // Create the toast and attach event listeners
             Windows.UI.Notifications.ToastNotification toast = new Windows.UI.Notifications.ToastNotification(toastXml);
 
@@ -968,6 +977,7 @@ namespace BetterMusic
             TabManager();
         }
 
+        #region Drag&Drop Functionality
         private void BgGrid_ItemDrag(object sender, DragEventArgs e)
         {
             //MessageBox.Show("Drag!");
@@ -1014,12 +1024,21 @@ namespace BetterMusic
         {
             plusImg.Visibility = Visibility.Hidden;
         }
+        #endregion
 
         private void ProgressSlider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
             pauseMusic();
             currentTime = progressSlider.Value;
             playMusic();
+        }
+
+        // Removes toast image on app close.
+        private void Better_Music_Closed(object sender, EventArgs e)
+        {
+            string appDir = AppDomain.CurrentDomain.BaseDirectory;
+            String imagePath = appDir + "toastImg.png";
+            File.Delete(imagePath);
         }
     }
 }

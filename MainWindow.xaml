@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BetterMusic"
         mc:Ignorable="d"
-        Title="Better Music" Icon="disc.ico" Height="450" Width="800" KeyUp="Better_Music_KeyUp" DragOver="Better_Music_DragOver" Drop="Better_Music_Drop">
+        Title="Better Music" Icon="disc.ico" Height="450" Width="800" KeyUp="Better_Music_KeyUp" DragOver="Better_Music_DragOver" Drop="Better_Music_Drop" Closed="Better_Music_Closed">
     <Window.Resources>
         <Image x:Key="play" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/play.png" Height="24" Width="24"/>
         <Image x:Key="pause" Source="C:\Users\Matt\source\repos\BetterMusic/BetterMusic/assetts/icons/pause.png" Height="24" Width="24"/>
