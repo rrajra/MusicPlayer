@@ -22,6 +22,7 @@ using System.Windows.Shapes;
 using Windows.Data.Xml.Dom;
 using WMPLib;
 using WinForms = System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace BetterMusic
 {
@@ -51,11 +52,14 @@ namespace BetterMusic
         //This is recordName, but with / and extension removed
         public string formatted;
         public bool newSong;
+        //Determines if icons need to be switched to white
         public bool whitecons;
 
         public bool isDragged;
         public bool isMinimized;
 
+        //Currently does nothing
+        //For if playlists / multiple directories are added
         public int activeTab;
 
         public BitmapImage albumArt;
@@ -88,12 +92,15 @@ namespace BetterMusic
         public double songDurMin;
         public WinForms.FolderBrowserDialog folderBrowse = new WinForms.FolderBrowserDialog();
 
+        //Timer for song duration
         System.Timers.Timer myTimer = new System.Timers.Timer(1000);
+        //This is the library that plays the music
         WMPLib.WindowsMediaPlayer playerNew = new WMPLib.WindowsMediaPlayer();
 
         //Timer so music autoplays
         System.Timers.Timer tmr = new System.Timers.Timer();
 
+        //This is the ID that shows up when a toast notif pops up
         private const String APP_ID = "Better Music";
 
 
@@ -102,7 +109,7 @@ namespace BetterMusic
             InitializeComponent();
             this.AllowDrop = true;
             //recordLocation = defaultDir;
-            //defaultDir = @"C:\Users\Matt\Desktop\MusicFile";
+            loadDirectory();
             recordName = "";
             //startupFetch();
             playerNew.PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(playerNew_PlayStateChange);
@@ -119,6 +126,24 @@ namespace BetterMusic
             BackBtn.Content = FindResource("back");
             //MusicTab.Content = FindResource("musicnote");
             fileDialog.Content = FindResource("folder");
+        }
+
+        public void loadDirectory()
+        {
+            try
+            {
+                var locale = System.AppDomain.CurrentDomain.BaseDirectory;
+                var toSave = locale + "\\dir.txt";
+                if (File.Exists(toSave))
+                {
+                    musicDirectory = File.ReadAllText(toSave);
+                    fetchSongs();
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Error loading directory.");
+            }
         }
 
         void tmr_Tick(object sender, EventArgs e)
@@ -444,6 +469,14 @@ namespace BetterMusic
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 musicDirectory = folderBrowse.SelectedPath;
+                //Gets local directory location
+                var locale = System.AppDomain.CurrentDomain.BaseDirectory;
+                var toSave = locale + "\\dir.txt";
+                using(FileStream fs = File.Create(toSave))
+                {
+                    byte[] directory = new UTF8Encoding(true).GetBytes(musicDirectory.ToString());
+                    fs.Write(directory, 0, directory.Length);
+                }
                 fetchSongs();
             }
             else
